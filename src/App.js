@@ -1,26 +1,45 @@
 import { useState } from "react";
 import "./app.css";
 import Task from "./Task";
-import TaskForm from "./TaskForm";
+//import TaskForm from "./TaskForm";
 import TaskHookForm from "./TaskHookForm";
 import PeopleForm from "./PeopleForm";
 import { initialTasks, initialTeam } from "./data";
-
+import { toast } from "react-toastify";
+import { nanoid } from "nanoid";
 
 function App() {
   const [tasks, setTasks] = useState(initialTasks);
   const [team, setTeam] = useState(initialTeam);
 
   function handleTaskSubmit(yeniTask) {
-    setTasks([yeniTask, ...tasks])
+    const newTask = { ...yeniTask, id: nanoid(5) };
+    setTasks([yeniTask, ...tasks]);
+    toast.success("Yeni görev oluşturuldu.");
   }
 
   function handlePeopleSubmit(yeniKisi) {
-    setTeam([...team, yeniKisi])
+    setTeam([...team, yeniKisi]);
+    toast.success("Yeni kişi oluşturuldu.");
   }
 
   function handleComplete(id) {
-    console.log("tamamlama fonksiyonunu buraya yazın")
+    console.log(
+      /*"tamamlama fonksiyonunu buraya yazın"*/ id,
+      "ID numaralı görev tamamlandı."
+    );
+    const updatedTasks = tasks.map((t) => {
+      if (t.id === id) {
+        return {
+          ...t,
+          status: "yapıldı",
+        };
+      } else {
+        return t;
+      }
+    });
+    setTasks(updatedTasks);
+    toast.success(`${id} ID numaralı görev tamamlandı.`);
   }
 
   return (
@@ -59,7 +78,6 @@ function App() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
